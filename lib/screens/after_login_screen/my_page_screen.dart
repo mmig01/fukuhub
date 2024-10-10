@@ -22,8 +22,8 @@ enum ChooseMethod { name, description, track, mbti }
 class _MyPageScreenState extends State<MyPageScreen> {
   final FirebaseDatabase _realtime = FirebaseDatabase.instance;
   StreamSubscription<User?>? _authSubscription; // StreamSubscription 변수 추가
-  final String logo = 'assets/images/dk_logo.png';
-  final String mainPicture = "assets/images/dm_hub.png";
+  final String logo = 'assets/images/fuku_hub.png';
+  final String mainPicture = "assets/images/fuku_hub.png";
 
   final storageRef = FirebaseStorage.instance.ref(); // Storage 참조
   User? _user;

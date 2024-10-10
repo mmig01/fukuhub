@@ -41,57 +41,56 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDwn_jJ2y-n7DyO4p4zkLxqfYKbGMrqynI',
-    appId: '1:781469771810:web:43d99d7e347afa59f2827b',
-    messagingSenderId: '781469771810',
-    projectId: 'fukuhub-ede12',
-    authDomain: 'fukuhub-ede12.firebaseapp.com',
-    databaseURL: 'https://fukuhub-ede12-default-rtdb.firebaseio.com',
-    storageBucket: 'fukuhub-ede12.appspot.com',
-    measurementId: 'G-V00536H4XQ',
+    apiKey: 'AIzaSyDmNwyi5ahvVtfDF6Yl1kDyHxBE0gPTWew',
+    appId: '1:133321103711:web:e9c8e439963643755e7eea',
+    messagingSenderId: '133321103711',
+    projectId: 'fukuhub-25859',
+    authDomain: 'fukuhub-25859.firebaseapp.com',
+    databaseURL: 'https://fukuhub-25859-default-rtdb.firebaseio.com',
+    storageBucket: 'fukuhub-25859.appspot.com',
+    measurementId: 'G-54Q087F2BC',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA8sI13eLKQzF3u39e5LEKdovAnIunL9Ws',
-    appId: '1:781469771810:android:212beccdf658f5a8f2827b',
-    messagingSenderId: '781469771810',
-    projectId: 'fukuhub-ede12',
-    databaseURL: 'https://fukuhub-ede12-default-rtdb.firebaseio.com',
-    storageBucket: 'fukuhub-ede12.appspot.com',
+    apiKey: 'AIzaSyBz5kbkf4aMc2OOt0OUJQ56jm1gDsjLS_Q',
+    appId: '1:133321103711:android:bd4526c57d4020d25e7eea',
+    messagingSenderId: '133321103711',
+    projectId: 'fukuhub-25859',
+    databaseURL: 'https://fukuhub-25859-default-rtdb.firebaseio.com',
+    storageBucket: 'fukuhub-25859.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBOuBD3FDTdUkf9BGTXuqlgemKEpA4Zm-I',
-    appId: '1:781469771810:ios:c0d2aa76ece0def1f2827b',
-    messagingSenderId: '781469771810',
-    projectId: 'fukuhub-ede12',
-    databaseURL: 'https://fukuhub-ede12-default-rtdb.firebaseio.com',
-    storageBucket: 'fukuhub-ede12.appspot.com',
-    iosClientId:
-        '781469771810-81erg9bsurbko4bb79r2785vj9etacmp.apps.googleusercontent.com',
-    iosBundleId: 'com.example.fukuhub',
+    apiKey: 'AIzaSyBQQ7wfR6hAnTVf3cs5isGbnJSSMELtDxo',
+    appId: '1:133321103711:ios:0b000b34a18ddab95e7eea',
+    messagingSenderId: '133321103711',
+    projectId: 'fukuhub-25859',
+    databaseURL: 'https://fukuhub-25859-default-rtdb.firebaseio.com',
+    storageBucket: 'fukuhub-25859.appspot.com',
+    iosClientId: '133321103711-6iquhu34bd16kh3bhgb4targdni81deq.apps.googleusercontent.com',
+    iosBundleId: 'com.fukuhub',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBOuBD3FDTdUkf9BGTXuqlgemKEpA4Zm-I',
-    appId: '1:781469771810:ios:c0d2aa76ece0def1f2827b',
-    messagingSenderId: '781469771810',
-    projectId: 'fukuhub-ede12',
-    databaseURL: 'https://fukuhub-ede12-default-rtdb.firebaseio.com',
-    storageBucket: 'fukuhub-ede12.appspot.com',
-    iosClientId:
-        '781469771810-81erg9bsurbko4bb79r2785vj9etacmp.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBQQ7wfR6hAnTVf3cs5isGbnJSSMELtDxo',
+    appId: '1:133321103711:ios:834e56d4e118d1195e7eea',
+    messagingSenderId: '133321103711',
+    projectId: 'fukuhub-25859',
+    databaseURL: 'https://fukuhub-25859-default-rtdb.firebaseio.com',
+    storageBucket: 'fukuhub-25859.appspot.com',
+    iosClientId: '133321103711-t443v8nu2pajndkvbnct82tmlg88dirn.apps.googleusercontent.com',
     iosBundleId: 'com.example.fukuhub',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDwn_jJ2y-n7DyO4p4zkLxqfYKbGMrqynI',
-    appId: '1:781469771810:web:19cbdaa0af3162b1f2827b',
-    messagingSenderId: '781469771810',
-    projectId: 'fukuhub-ede12',
-    authDomain: 'fukuhub-ede12.firebaseapp.com',
-    databaseURL: 'https://fukuhub-ede12-default-rtdb.firebaseio.com',
-    storageBucket: 'fukuhub-ede12.appspot.com',
-    measurementId: 'G-0KTZ1375S2',
+    apiKey: 'AIzaSyDmNwyi5ahvVtfDF6Yl1kDyHxBE0gPTWew',
+    appId: '1:133321103711:web:9b1a5a071e5537dc5e7eea',
+    messagingSenderId: '133321103711',
+    projectId: 'fukuhub-25859',
+    authDomain: 'fukuhub-25859.firebaseapp.com',
+    databaseURL: 'https://fukuhub-25859-default-rtdb.firebaseio.com',
+    storageBucket: 'fukuhub-25859.appspot.com',
+    measurementId: 'G-0MPWK7HYY4',
   );
+
 }

@@ -22,9 +22,14 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             Column(
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 SizedBox(
-                  height: 30,
-                  child: Image.asset(logo),
+                  height: 70,
+                  child: Image.asset(
+                    logo,
+                  ),
                 ),
               ],
             ),

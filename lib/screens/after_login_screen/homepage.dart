@@ -20,8 +20,8 @@ class HomepageState extends State<Homepage> {
   LionUserModel? lionUserModel;
   Future<List<LionUserModel>>? users;
   final FirebaseDatabase _realtime = FirebaseDatabase.instance;
-  final String logo = 'assets/images/dk_logo.png';
-  final String mainPicture = "assets/images/dm_hub.png";
+  final String logo = 'assets/images/fuku_hub.png';
+  final String mainPicture = "assets/images/fuku_hub.png";
   StreamSubscription<User?>? _authSubscription;
   final ScrollController _scrollController = ScrollController();
   double _sliderValue = 0;

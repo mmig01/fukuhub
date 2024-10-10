@@ -32,15 +32,15 @@ class TextBoxWidget extends StatelessWidget {
         obscureText: obscureText,
         controller: controller, // Controller 연결
         decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Color(0xffd76833), // 기본 상태의 테두리 색상
+              color: Colors.black.withOpacity(0.7), // 기본 상태의 테두리 색상
               width: 1.2,
             ),
           ),
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Color(0xffd76833), // 포커스 상태의 테두리 색상
+              color: Colors.black.withOpacity(0.7), // 포커스 상태의 테두리 색상
               width: 2.0, // 테두리 두께
             ),
           ),

@@ -42,11 +42,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme:
           ThemeData(primaryColor: Colors.white, fontFamily: 'Sunflower-Light'),
-      home: _user != null
-          ? const Homepage()
-          : const HomeScreen(
-              isFirstNavigated: true,
-            ),
+      home: _user != null ? const Homepage() : const HomeScreen(),
     );
   }
 }

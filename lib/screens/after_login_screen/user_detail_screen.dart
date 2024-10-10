@@ -13,7 +13,7 @@ class UserDetailScreen extends StatefulWidget {
 }
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
-  final String logo = 'assets/images/dk_logo.png';
+  final String logo = 'assets/images/fuku_hub.png';
 
   late SharedPreferences prefs;
   bool isLiked = false;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class StudyScreen extends StatelessWidget {
   const StudyScreen({super.key});
-  final String logo = 'assets/images/dk_logo.png';
+  final String logo = 'assets/images/fuku_hub.png';
   final String img = 'assets/images/acho.png';
   @override
   Widget build(BuildContext context) {

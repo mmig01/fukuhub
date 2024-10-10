@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
 import 'signup_screen.dart';
-import 'package:fukuhub/widgets/go_to_first_screen_widget.dart';
 import 'package:fukuhub/widgets/total_login_widget.dart';
 import 'package:fukuhub/widgets/orange_rounded_button.dart';
 import 'package:fukuhub/widgets/textbox_widget.dart';
@@ -17,8 +16,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final String logo = 'assets/images/dk_logo.png';
-  final String mainPicture = "assets/images/dm_hub.png";
+  final String mainPicture = "assets/images/fuku_hub.png";
   bool _loginColumnVisible = false;
   bool _socialLoginColumnVisible = false;
 
@@ -166,21 +164,7 @@ class _LoginState extends State<Login> {
             Column(
               children: [
                 const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      height: 30,
-                      child: Hero(
-                        tag: logo,
-                        child: GoToFirstScreenWidget(logo: logo),
-                      ),
-                    ),
-                  ],
+                  height: 50,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
