@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "781469771810",
+    "firebase_url": "https://fukuhub-ede12-default-rtdb.firebaseio.com",
+    "project_id": "fukuhub-ede12",
+    "storage_bucket": "fukuhub-ede12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781469771810:android:212beccdf658f5a8f2827b",
+        "android_client_info": {
+          "package_name": "com.fukuhub.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8sI13eLKQzF3u39e5LEKdovAnIunL9Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781469771810-g50lrfst298hhcfu4sq48108adto97jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "781469771810-81erg9bsurbko4bb79r2785vj9etacmp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fukuhub"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781469771810:android:99f926ace6416ee3f2827b",
+        "android_client_info": {
+          "package_name": "com.fukuhub.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8sI13eLKQzF3u39e5LEKdovAnIunL9Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781469771810-g50lrfst298hhcfu4sq48108adto97jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "781469771810-81erg9bsurbko4bb79r2785vj9etacmp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fukuhub"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
