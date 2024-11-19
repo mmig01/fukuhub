@@ -253,7 +253,7 @@ class _SignUpState extends State<SignUp> {
                           const Text(
                             "会員加入",
                             style: TextStyle(
-                              fontFamily: 'Fafo-Nihongo',
+                              fontFamily: 'sana',
                               fontSize: 30,
                             ),
                           ),
