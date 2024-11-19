@@ -75,6 +75,7 @@ flutter:
   assets:
     - assets/images/fuku_hub.png
     - assets/images/fuku_pin.png
+    - assets/images/background.webp
    
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -134,5 +135,11 @@ flutter:
     - family: BuntaOneKana-U
       fonts:
         - asset: assets/fonts/static/BuntaOneKana-U.ttf
+    - family: Fafo-Nihongo
+      fonts:
+        - asset: assets/fonts/static/Fafo-Nihongo.ttf
+    - family: sana
+      fonts:
+        - asset: assets/fonts/static/SNsanafonMaruJ30.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

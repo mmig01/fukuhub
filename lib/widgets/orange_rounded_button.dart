@@ -26,7 +26,7 @@ class OrangeRoundedButton extends StatelessWidget {
             text,
             style: const TextStyle(
                 color: Colors.white,
-                fontFamily: 'Outfit-Bold',
+                fontFamily: 'sana',
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),

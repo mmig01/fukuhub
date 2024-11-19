@@ -61,8 +61,10 @@ class _SignUpState extends State<SignUp> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "비밀번호가 일치하지 않습니다.",
+            // 비밀번호가 일치하지 않습니다.
+            "パスワードが一致しません。",
             style: TextStyle(
+              fontFamily: 'sana',
               fontSize: 15,
             ),
           ),
@@ -136,8 +138,10 @@ class _SignUpState extends State<SignUp> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '비밀번호가 너무 약합니다.',
+                // 비밀번호가 너무 약합니다.
+                'パスワードが弱すぎます。',
                 style: TextStyle(
+                  fontFamily: 'sana',
                   fontSize: 15,
                 ),
               ),
@@ -150,8 +154,10 @@ class _SignUpState extends State<SignUp> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '해당 이메일로 가입된 계정이 이미 존재합니다.',
+                // 해당 이메일로 가입된 계정이 이미 존재합니다.
+                'その電子メールで登録されたアカウントはすでに存在します。',
                 style: TextStyle(
+                  fontFamily: 'sana',
                   fontSize: 15,
                 ),
               ),
@@ -164,8 +170,10 @@ class _SignUpState extends State<SignUp> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '유효하지 않은 입력입니다.',
+                //유효하지 않은 입력입니다.
+                '無効な入力です。',
                 style: TextStyle(
+                  fontFamily: 'sana',
                   fontSize: 15,
                 ),
               ),
@@ -190,159 +198,177 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 50,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage(
+                  'assets/images/background.webp',
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withOpacity(0.5), // 투명도 설정
+                  BlendMode.dstATop,
+                ),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Column(
                   children: [
-                    Column(
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 200,
-                          child: Hero(
-                              tag: mainPicture,
-                              child: Image.asset(mainPicture)),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              child: Hero(
+                                  tag: mainPicture,
+                                  child: Image.asset(mainPicture)),
+                            )
+                          ],
                         )
                       ],
-                    )
+                    ),
+                    const SizedBox(
+                      height: 80,
+                    ),
                   ],
                 ),
-                const SizedBox(
-                  height: 80,
+                AnimatedOpacity(
+                  opacity: _loginColumnVisible ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 1000),
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "会員加入",
+                            style: TextStyle(
+                              fontFamily: 'Fafo-Nihongo',
+                              fontSize: 30,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextBoxWidget(
+                            labelText: "Eメール",
+                            obscureText: false,
+                            controller: _emailController, // 컨트롤러 전달
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextBoxWidget(
+                            labelText: "パスワード",
+                            obscureText: true,
+                            controller: _passwordController, // 컨트롤러 전달
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextBoxWidget(
+                            labelText: "パスワード確認",
+                            obscureText: true,
+                            controller: _confirmPasswordController, // 컨트롤러 전달
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 13,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "アカウントはすでにありますか",
+                            style: TextStyle(
+                                fontFamily: 'Fafo-Nihongo',
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const Login(
+                                    isFirstNavigatedSocialLoginButton: false,
+                                  ),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = 0.0;
+                                    const end = 1.0;
+                                    final opacityTween =
+                                        Tween(begin: begin, end: end);
+                                    final opacityAnimation =
+                                        animation.drive(opacityTween);
+                                    return FadeTransition(
+                                      opacity: opacityAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                  transitionDuration: const Duration(
+                                      seconds: 1), // 애니메이션의 길이 설정
+
+                                  fullscreenDialog: true,
+                                )),
+                            child: const Text(
+                              "ログイン",
+                              style: TextStyle(
+                                fontFamily: 'Fafo-Nihongo',
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        width: 150,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18.0),
+                          border: Border.all(
+                            color: Colors.orange.withOpacity(0.1),
+                            width: 1.0,
+                          ),
+                        ),
+                        child: OrangeRoundedButton(
+                          text: "会員加入",
+                          heroTag: "signup_tag",
+                          method: _signUpWithEmailAndPassword,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 80,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            AnimatedOpacity(
-              opacity: _loginColumnVisible ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 1000),
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Sign up Form",
-                        style: TextStyle(
-                          fontFamily: 'Outfit-Bold',
-                          fontSize: 30,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextBoxWidget(
-                        labelText: "email",
-                        obscureText: false,
-                        controller: _emailController, // 컨트롤러 전달
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextBoxWidget(
-                        labelText: "password",
-                        obscureText: true,
-                        controller: _passwordController, // 컨트롤러 전달
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextBoxWidget(
-                        labelText: "confirm password",
-                        obscureText: true,
-                        controller: _confirmPasswordController, // 컨트롤러 전달
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 13,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Have an account?",
-                        style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        width: 6,
-                      ),
-                      InkWell(
-                        onTap: () => Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const Login(
-                                isFirstNavigatedSocialLoginButton: false,
-                              ),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                const begin = 0.0;
-                                const end = 1.0;
-                                final opacityTween =
-                                    Tween(begin: begin, end: end);
-                                final opacityAnimation =
-                                    animation.drive(opacityTween);
-                                return FadeTransition(
-                                  opacity: opacityAnimation,
-                                  child: child,
-                                );
-                              },
-                              transitionDuration:
-                                  const Duration(seconds: 1), // 애니메이션의 길이 설정
-
-                              fullscreenDialog: true,
-                            )),
-                        child: const Text(
-                          "Log in",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    width: 150,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18.0),
-                      border: Border.all(
-                        color: Colors.orange.withOpacity(0.1),
-                        width: 1.0,
-                      ),
-                    ),
-                    child: OrangeRoundedButton(
-                      text: "Sign Up",
-                      heroTag: "signup_tag",
-                      method: _signUpWithEmailAndPassword,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 80,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

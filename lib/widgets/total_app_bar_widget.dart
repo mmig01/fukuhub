@@ -75,20 +75,6 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
                     TextButton(
                         onPressed: () {},
                         child: const Text(
-                          'Study',
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text(
                           'etc',
                           style: TextStyle(
                             fontFamily: 'Outfit',

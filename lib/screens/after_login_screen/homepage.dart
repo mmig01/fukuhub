@@ -1,10 +1,14 @@
 import 'dart:async'; // StreamSubscription을 사용하기 위해 추가
+import 'dart:typed_data';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fukuhub/models/marker_model.dart';
 import 'package:fukuhub/screens/before_login_screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fukuhub/widgets/total_app_bar_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -14,52 +18,211 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
-  final FirebaseDatabase _realtime = FirebaseDatabase.instance;
+  StreamSubscription<User?>? _authSubscription; // StreamSubscription 변수 추가
+  final storageRef = FirebaseStorage.instance.ref(); // Storage 참조
+
+  User? _user;
+  Uint8List? _image;
+
   final String logo = 'assets/images/fuku_hub.png';
   final String mainPicture = "assets/images/fuku_hub.png";
   final Set<Marker> _markers = {};
   BitmapDescriptor? _customMarker;
   LatLng? _selectedPosition; // 선택된 위치 정보
-  final TextEditingController _postController =
-      TextEditingController(); // 게시글 입력 컨트롤러
+  bool isMarked = false; // 마커가 있는지 여부
+  MarkerModel _selectedMarker = MarkerModel(
+    title: '',
+    imageUrl: '',
+    description: '',
+    email: '',
+  ); // 선택된 마커 정보
+  final TextEditingController _titleController =
+      TextEditingController(); // 제목 컨트롤러
+  final TextEditingController _descriptionController =
+      TextEditingController(); // 설명 컨트롤러
 
   @override
   void initState() {
     super.initState();
     _loadCustomMarker();
+
+    _authSubscription =
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (mounted) {
+        setState(() {
+          _user = user;
+        });
+      }
+    });
+    // 데이터베이스에서 마커 추가
+    _addMarkersFromDatabase();
   }
 
   // 커스텀 마커 로드
   void _loadCustomMarker() async {
-    _customMarker = await BitmapDescriptor.fromAssetImage(
+    _customMarker = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/images/fuku_pin.png',
     );
   }
 
-  // 마커 추가
-  void _addMarker(LatLng position, String post) {
-    final marker = Marker(
-      markerId: MarkerId(position.toString()),
-      position: position,
-      infoWindow: InfoWindow(
-        title: 'Custom Post',
-        snippet: post,
-      ),
-      icon: _customMarker ?? BitmapDescriptor.defaultMarker, // 커스텀 마커 사용
-    );
+  Future<void> _addMarkersFromDatabase() async {
+    final databaseRef = FirebaseDatabase.instance.ref().child('posts');
 
-    setState(() {
-      _markers.add(marker);
-    });
+    try {
+      // Firebase에서 게시글 데이터 가져오기
+      final snapshot = await databaseRef.get();
+
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> posts = snapshot.value as Map<dynamic, dynamic>;
+
+        // 게시글 데이터 반복
+        posts.forEach((postId, post) {
+          // 위치 데이터가 없으면 무시
+          if (post['position'] == null) return;
+
+          LatLng position = LatLng(
+            post['position']['latitude'],
+            post['position']['longitude'],
+          );
+
+          String truncateDescription(String description) {
+            if (description.length > 10) {
+              return '${description.substring(0, 10)}...';
+            }
+            return description;
+          }
+
+          // description 축약
+          String truncatedDescription =
+              truncateDescription(post['description']);
+          // 각 게시글 정보를 마커로 추가
+          final marker = Marker(
+            markerId: MarkerId(postId),
+            position: position,
+            infoWindow: InfoWindow(
+              title: post['title'],
+              snippet: truncatedDescription,
+              onTap: () {
+                setState(() {
+                  _selectedMarker = MarkerModel(
+                    title: post['title'],
+                    imageUrl: post['imageUrl'],
+                    description: post['description'],
+                    email: post['account'],
+                  );
+                  isMarked = true;
+                });
+              },
+            ),
+            icon: _customMarker ?? BitmapDescriptor.defaultMarker, // 커스텀 마커 사용
+          );
+
+          setState(() {
+            _markers.add(marker);
+          });
+        });
+      } else {
+        print('No posts found in the database.');
+      }
+    } catch (e) {
+      print('Error fetching posts: $e');
+    }
   }
 
   // 위치 클릭 시 위젯 표시
   void _showPostWidget(LatLng position) {
     setState(() {
+      isMarked = false;
       _selectedPosition = position;
-      _postController.clear();
+      _titleController.clear();
+      _descriptionController.clear();
     });
+  }
+
+  // 이미지 가져오기
+  Future<void> _pickImage() async {
+    Uint8List? pickedFile = await ImagePickerWeb.getImageAsBytes();
+    setState(() {
+      _image = pickedFile;
+    });
+  }
+
+  Future<void> _savePost() async {
+    if (_selectedPosition != null) {
+      try {
+        // Firebase Realtime Database에 새 게시글 생성
+        final databaseRef =
+            FirebaseDatabase.instance.ref().child('posts').push();
+        final postId = databaseRef.key; // 고유 ID 가져오기
+        if (postId == null) throw Exception('Failed to generate post ID');
+
+        // Firebase Realtime Database에 데이터 저장
+        await databaseRef.set({
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'position': {
+            'latitude': _selectedPosition!.latitude,
+            'longitude': _selectedPosition!.longitude,
+          },
+          'account': _user!.email,
+        });
+
+        if (_image != null) {
+          // Firebase Storage에 이미지 업로드
+          String fileName = 'posts/$postId/image.png'; // postId를 경로에 사용
+          final storageRef = FirebaseStorage.instance.ref().child(fileName);
+          final uploadTask = storageRef.putData(_image!);
+
+          final snapshot = await uploadTask;
+          final imageUrl = await snapshot.ref.getDownloadURL();
+
+          // Firebase Realtime Database에 데이터 저장
+          await databaseRef.update({
+            'imageUrl': imageUrl,
+          });
+        }
+
+        // 상태 초기화
+        setState(() {
+          _selectedPosition = null;
+          _titleController.clear();
+          _descriptionController.clear();
+          _image = null;
+        });
+
+        // 로딩 화면을 잠깐 표시
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(), // 로딩 스피너 표시
+              );
+            },
+          );
+        }
+        await _addMarkersFromDatabase();
+        // 약간의 지연을 주고 페이지를 이동
+        await Future.delayed(const Duration(seconds: 2));
+
+        // 로딩 화면을 닫고 새 페이지로 이동
+        if (mounted) {
+          Navigator.of(context).pop(); // 로딩 화면 닫기
+        }
+      } catch (e) {
+        print('Error saving post: $e');
+      }
+    } else {}
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel(); // Firebase Auth 리스너 정리
+    _titleController.dispose(); // 텍스트 컨트롤러 정리
+    _descriptionController.dispose(); // 텍스트 컨트롤러 정리
+    super.dispose();
   }
 
   @override
@@ -100,57 +263,136 @@ class HomepageState extends State<Homepage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    '게시글을 입력하세요.',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   const SizedBox(height: 10),
-                  if (_selectedPosition != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: _postController,
-                          decoration: const InputDecoration(
-                            labelText: 'Enter your post',
-                            hintText: 'Enter your post here',
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
+                  isMarked
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _addMarker(
-                                    _selectedPosition!, _postController.text);
-                                setState(() {
-                                  _selectedPosition = null;
-                                });
-                              },
-                              child: const Text('Save'),
+                            Text(
+                              _selectedMarker.title,
+                              style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            const SizedBox(width: 8),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedPosition = null;
-                                });
-                              },
-                              child: const Text('Cancel'),
+                            const SizedBox(height: 20),
+                            if (_selectedMarker.imageUrl != '')
+                              Container(
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Image.network(
+                                  _selectedMarker.imageUrl,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child; // 이미지가 정상적으로 로드되었을 때
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null, // 진행률을 표시
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.broken_image,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ); // 에러 발생 시 대체 아이콘
+                                  },
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+                            Text(
+                              _selectedMarker.description,
+                              style: const TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              '작성자: ${_selectedMarker.email}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
                           ],
-                        ),
-                      ],
-                    )
-                  else
-                    const Text('지도를 클릭하여 위치를 선택하세요.'),
+                        )
+                      : _selectedPosition != null
+                          ? Column(
+                              children: [
+                                const Text(
+                                  '게시글을 입력하세요.',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                TextField(
+                                  controller: _titleController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter title',
+                                    hintText: 'Enter title here',
+                                  ),
+                                ),
+                                const SizedBox(height: 50),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (_image != null)
+                                      Image.memory(
+                                        _image!,
+                                        height: 200,
+                                        width: 200,
+                                      ),
+                                    const SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: _pickImage,
+                                      child: const Text('Pick Image'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                TextField(
+                                  controller: _descriptionController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter your post',
+                                    hintText: 'Enter your post here',
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                Column(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _savePost();
+                                      },
+                                      child: const Text('Save'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : const Text(
+                              '지도를 클릭하여 위치를 선택하세요.',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                 ],
               ),
             ),
           ),
+          // 로딩 표시
         ],
       ),
       endDrawer: Drawer(
