@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
 import 'login_screen.dart';
-import 'package:fukuhub/widgets/total_login_widget.dart';
 import 'package:fukuhub/widgets/orange_rounded_button.dart';
 import 'package:fukuhub/widgets/textbox_widget.dart';
 
@@ -19,7 +18,6 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final String mainPicture = "assets/images/fuku_hub.png";
   bool _loginColumnVisible = false;
-  bool _socialLoginColumnVisible = false;
   final FirebaseDatabase _realtime = FirebaseDatabase.instance;
 
   // 이메일 및 비밀번호 컨트롤러
@@ -36,15 +34,6 @@ class _SignUpState extends State<SignUp> {
         _loginColumnVisible = true;
       });
     });
-    if (widget.isFirstNavigatedSocialLoginButton) {
-      Future.delayed(const Duration(milliseconds: 1300), () {
-        setState(() {
-          _socialLoginColumnVisible = true;
-        });
-      });
-    } else {
-      _socialLoginColumnVisible = true;
-    }
   }
 
   // dispose 메서드를 오버라이드하여 리소스를 정리
@@ -352,8 +341,6 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
-            TotalLoginWidget(
-                socialLoginColumnVisible: _socialLoginColumnVisible),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
-import 'package:fukuhub/screens/after_login_screen/study_screen.dart';
 import 'package:flutter/material.dart';
 
 class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,10 +22,10 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
             Column(
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 SizedBox(
-                  height: 70,
+                  height: 60,
                   child: Image.asset(
                     logo,
                   ),
@@ -74,25 +73,7 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
                       width: 20,
                     ),
                     TextButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const StudyScreen(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(
-                                  milliseconds: 500), // 애니메이션의 길이 설정
-                              reverseTransitionDuration:
-                                  const Duration(milliseconds: 500),
-                              fullscreenDialog: false,
-                            )),
+                        onPressed: () {},
                         child: const Text(
                           'Study',
                           style: TextStyle(
@@ -121,6 +102,13 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
           ],
+        ),
+      ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0),
+        child: Container(
+          color: Colors.black.withOpacity(0.1), // 경계선 색상
+          height: 1.0, // 경계선 두께
         ),
       ),
     );

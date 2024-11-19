@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
 import 'signup_screen.dart';
-import 'package:fukuhub/widgets/total_login_widget.dart';
 import 'package:fukuhub/widgets/orange_rounded_button.dart';
 import 'package:fukuhub/widgets/textbox_widget.dart';
 
@@ -18,7 +17,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final String mainPicture = "assets/images/fuku_hub.png";
   bool _loginColumnVisible = false;
-  bool _socialLoginColumnVisible = false;
 
   // 이메일 및 비밀번호 컨트롤러
   final TextEditingController _emailController = TextEditingController();
@@ -32,15 +30,6 @@ class _LoginState extends State<Login> {
         _loginColumnVisible = true;
       });
     });
-    if (widget.isFirstNavigatedSocialLoginButton) {
-      Future.delayed(const Duration(milliseconds: 1300), () {
-        setState(() {
-          _socialLoginColumnVisible = true;
-        });
-      });
-    } else {
-      _socialLoginColumnVisible = true;
-    }
   }
 
   // Firebase 로그인 메서드
@@ -181,6 +170,10 @@ class _LoginState extends State<Login> {
                     )
                   ],
                 ),
+                const Text(
+                  "来てください",
+                  style: TextStyle(fontFamily: 'BuntaOneKana-M', fontSize: 30),
+                ),
                 const SizedBox(
                   height: 80,
                 ),
@@ -301,8 +294,6 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-            TotalLoginWidget(
-                socialLoginColumnVisible: _socialLoginColumnVisible),
           ],
         ),
       ),

@@ -1,12 +1,10 @@
 import 'dart:async'; // StreamSubscription을 사용하기 위해 추가
-import 'package:fukuhub/models/lion_user_model.dart';
-import 'package:fukuhub/screens/after_login_screen/my_page_screen.dart';
 import 'package:fukuhub/screens/before_login_screen/login_screen.dart';
-import 'package:fukuhub/widgets/lion_user_info.dart';
-import 'package:fukuhub/widgets/total_app_bar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fukuhub/widgets/total_app_bar_widget.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -16,291 +14,240 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
-  User? _user;
-  LionUserModel? lionUserModel;
-  Future<List<LionUserModel>>? users;
   final FirebaseDatabase _realtime = FirebaseDatabase.instance;
   final String logo = 'assets/images/fuku_hub.png';
   final String mainPicture = "assets/images/fuku_hub.png";
-  StreamSubscription<User?>? _authSubscription;
-  final ScrollController _scrollController = ScrollController();
-  double _sliderValue = 0;
+  final Set<Marker> _markers = {};
+  BitmapDescriptor? _customMarker;
+  LatLng? _selectedPosition; // 선택된 위치 정보
+  final TextEditingController _postController =
+      TextEditingController(); // 게시글 입력 컨트롤러
 
   @override
   void initState() {
     super.initState();
-    // 사용자의 로그인 상태를 실시간으로 감지
-    _authSubscription =
-        FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (mounted) {
-        setState(() {
-          _user = user;
-          users = setUsers();
-          setLionUserModel();
-        });
-      }
-    });
-
-    // ScrollController의 변화에 따른 Slider 값 업데이트
-    _scrollController.addListener(() {
-      if (_scrollController.hasClients) {
-        final double maxScrollExtent =
-            _scrollController.position.maxScrollExtent;
-        final double currentScrollPosition = _scrollController.position.pixels;
-
-        setState(() {
-          _sliderValue = (currentScrollPosition / maxScrollExtent) * 100;
-        });
-      }
-    });
+    _loadCustomMarker();
   }
 
-// Slider 값이 변경될 때 호출되는 함수
-  void _onSliderChanged(double value) {
-    final double maxScrollExtent = _scrollController.position.maxScrollExtent;
-
-    // Slider의 값을 스크롤 위치로 변환하여 스크롤
-    _scrollController.jumpTo(
-      (value / 100) * maxScrollExtent,
+  // 커스텀 마커 로드
+  void _loadCustomMarker() async {
+    _customMarker = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/fuku_pin.png',
     );
   }
 
-  Future<List<LionUserModel>> setUsers() async {
-    DataSnapshot snapshot = await _realtime.ref("users").get();
+  // 마커 추가
+  void _addMarker(LatLng position, String post) {
+    final marker = Marker(
+      markerId: MarkerId(position.toString()),
+      position: position,
+      infoWindow: InfoWindow(
+        title: 'Custom Post',
+        snippet: post,
+      ),
+      icon: _customMarker ?? BitmapDescriptor.defaultMarker, // 커스텀 마커 사용
+    );
 
-    if (snapshot.value != null) {
-      DataSnapshot snapshot0 = await _realtime.ref("users").get();
-      Map<dynamic, dynamic> toMap = snapshot0.value as Map<dynamic, dynamic>;
-      List<LionUserModel> data =
-          toMap.values.map((e) => LionUserModel.fromJson(e)).toList();
-      return data;
-    }
-    return [];
+    setState(() {
+      _markers.add(marker);
+    });
   }
 
-  Future<void> setLionUserModel() async {
-    if (_user != null && _user!.email != null) {
-      var name = "${_user!.email}".split('@')[0];
-      var emailname = "${_user!.email}".split('@')[1].split('.')[0];
-      try {
-        DataSnapshot snapshot =
-            await _realtime.ref("users").child(name + emailname).get();
-
-        if (snapshot.value != null) {
-          Map<String, dynamic> toMap = snapshot.value as Map<String, dynamic>;
-          setState(() {
-            lionUserModel = LionUserModel.fromJson(toMap);
-          });
-        }
-      } catch (e) {
-        print("Error fetching data: $e");
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    // StreamSubscription 해제
-    _authSubscription?.cancel();
-    _scrollController.dispose(); // ScrollController 해제
-    super.dispose();
+  // 위치 클릭 시 위젯 표시
+  void _showPostWidget(LatLng position) {
+    setState(() {
+      _selectedPosition = position;
+      _postController.clear();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        appBar: TotalAppBar(logo: logo),
-        endDrawer: Drawer(
-          backgroundColor: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              // Drawer Header
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      height: 80,
-                      child: lionUserModel != null
-                          ? lionUserModel!.image != null
-                              ? Image.network(lionUserModel!.image!,
-                                  fit: BoxFit.cover)
-                              : Image.asset(mainPicture)
-                          : Image.asset(mainPicture),
-                    ),
-                    Text(
-                      lionUserModel != null
-                          ? (lionUserModel!.name != null
-                              ? lionUserModel!.name!
-                              : "anonymous lion")
-                          : "",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'Sunflower-Bold',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      lionUserModel != null
-                          ? (lionUserModel!.description != null
-                              ? lionUserModel!.description!
-                              : "no description")
-                          : "",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontFamily: 'Sunflower-Light',
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              // Drawer 아이템들
-
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text(
-                  'My Page',
-                  style: TextStyle(
-                    fontFamily: 'Sunflower-Light',
-                    color: Colors.black,
-                    fontSize: 18,
+      appBar: TotalAppBar(logo: logo),
+      body: Row(
+        children: [
+          // 왼쪽 절반: Google Map
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: GoogleMap(
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(37.4483, 140.5758), // 다무라 시의 위도와 경도
+                    zoom: 12.0, // 10km 반경을 보기 위한 줌 레벨
                   ),
+                  markers: _markers,
+                  onTap: (LatLng position) {
+                    _showPostWidget(position); // 장소 클릭 시 위젯 표시
+                  },
                 ),
-                onTap: () {
-                  if (mounted) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            const MyPageScreen(),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                        transitionDuration:
-                            const Duration(milliseconds: 500), // 애니메이션의 길이 설정
-                        reverseTransitionDuration:
-                            const Duration(milliseconds: 500),
-                        fullscreenDialog: false,
-                      ),
-                      (Route<dynamic> route) => false, // 모든 이전 화면을 제거
-                    );
-                  }
-                },
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontFamily: 'Sunflower-Light',
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                ),
-                onTap: () {
-                  _handleSignOut();
-                },
-              ),
-            ],
+            ),
           ),
+          // 오른쪽 절반: Column을 통한 정보 표시 영역
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '게시글을 입력하세요.',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  if (_selectedPosition != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: _postController,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter your post',
+                            hintText: 'Enter your post here',
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                _addMarker(
+                                    _selectedPosition!, _postController.text);
+                                setState(() {
+                                  _selectedPosition = null;
+                                });
+                              },
+                              child: const Text('Save'),
+                            ),
+                            const SizedBox(width: 8),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedPosition = null;
+                                });
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  else
+                    const Text('지도를 클릭하여 위치를 선택하세요.'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      endDrawer: Drawer(
+        backgroundColor: Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            // Drawer Header
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    height: 80,
+                    child: Image.asset(mainPicture),
+                  ),
+                  const Text(
+                    "hmm", // 사용자 이름
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: 'Sunflower-Bold',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  const Text(
+                    "hmm", // 한 줄 소개
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontFamily: 'Sunflower-Light',
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            // Drawer 아이템들
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text(
+                'My Page',
+                style: TextStyle(
+                  fontFamily: 'Sunflower-Light',
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              onTap: () {},
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text(
+                'Logout',
+                style: TextStyle(
+                  fontFamily: 'Sunflower-Light',
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              onTap: () {
+                _handleSignOut();
+              },
+            ),
+          ],
         ),
-        body: SingleChildScrollView(
-          child: FutureBuilder(
-            future: users,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    SizedBox(
-                      width: 2000,
-                      height: 530,
-                      child: userInfoList(snapshot),
-                    ), // 하단에 Slider 추가
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Slider(
-                        value: _sliderValue,
-                        thumbColor: Colors.orange,
-                        activeColor: Colors.orange.withOpacity(0.5),
-                        min: 0,
-                        max: 100,
-                        label: _sliderValue.round().toString(),
-                        onChanged: (value) {
-                          setState(() {
-                            value = value.clamp(0, 100);
-                            _sliderValue = value;
-                          });
-                          _onSliderChanged(value);
-                        },
-                      ),
-                    ),
-                    // 끝으로 이동하는 버튼 추가
-                  ],
-                );
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
-        ));
-  }
-
-  ListView userInfoList(AsyncSnapshot<List<LionUserModel>> snapshot) {
-    return ListView.separated(
-      shrinkWrap: true,
-      controller: _scrollController, // ScrollController 추가
-      scrollDirection: Axis.horizontal,
-      itemCount: snapshot.data!.length,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemBuilder: (context, index) {
-        var user = snapshot.data![index];
-        return LionUserInfo(user: user, mainPicture: mainPicture);
-      },
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 60,
       ),
     );
   }
 
+  // 로그아웃 처리
   Future<CircularProgressIndicator> _handleSignOut() async {
     try {
       if (mounted) {
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(), // 로딩 스피너 표시
-              );
-            },
-          );
-        }
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(), // 로딩 스피너 표시
+            );
+          },
+        );
 
         await Future.delayed(const Duration(milliseconds: 500));
+
         if (mounted) {
           Navigator.of(context).pop(); // 로딩 화면 닫기
           await FirebaseAuth.instance.signOut();
@@ -320,12 +267,10 @@ class HomepageState extends State<Homepage> {
                   child: child,
                 );
               },
-              transitionDuration:
-                  const Duration(milliseconds: 500), // 애니메이션의 길이 설정
+              transitionDuration: const Duration(milliseconds: 500),
               reverseTransitionDuration: const Duration(milliseconds: 500),
-              fullscreenDialog: false,
             ),
-            (Route<dynamic> route) => false, // 모든 이전 화면을 제거
+            (Route<dynamic> route) => false,
           );
         }
       }
