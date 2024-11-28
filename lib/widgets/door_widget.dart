@@ -51,8 +51,7 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     // 애니메이션 실행
     _controller.forward().then((_) {
       // 애니메이션 종료 후 다음 화면으로 이동
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const Homepage(),
@@ -62,8 +61,11 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
               child: child,
             );
           },
-          transitionDuration: const Duration(seconds: 1),
+          transitionDuration: const Duration(milliseconds: 500), // 애니메이션의 길이 설정
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          fullscreenDialog: false,
         ),
+        (Route<dynamic> route) => false, // 모든 이전 화면을 제거
       );
     });
   }
