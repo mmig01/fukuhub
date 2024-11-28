@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fukuhub/screens/before_login_screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
+import 'package:fukuhub/screens/door_test.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -40,9 +41,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme:
-          ThemeData(primaryColor: Colors.white, fontFamily: 'Sunflower-Light'),
-      home: _user != null ? const Homepage() : const HomeScreen(),
-    );
+        theme: ThemeData(
+            primaryColor: Colors.white, fontFamily: 'Sunflower-Light'),
+        home: _user != null ? const Homepage() : const HomeScreen());
+    // home: const DoorAnimationExample());
   }
 }

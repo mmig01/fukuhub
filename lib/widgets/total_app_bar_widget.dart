@@ -32,61 +32,6 @@ class TotalAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-            Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const Homepage(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
-                              transitionDuration: const Duration(
-                                  milliseconds: 500), // 애니메이션의 길이 설정
-                              reverseTransitionDuration:
-                                  const Duration(milliseconds: 500),
-                              fullscreenDialog: false,
-                            ),
-                            (Route<dynamic> route) => false, // 모든 이전 화면을 제거
-                          );
-                        },
-                        child: const Text(
-                          'Home',
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'etc',
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )),
-                  ],
-                ),
-              ],
-            ),
           ],
         ),
       ),
