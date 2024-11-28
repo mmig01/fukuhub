@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fukuhub/screens/after_login_screen/homepage.dart';
 import 'package:fukuhub/widgets/door_widget.dart';
 
 class Login extends StatefulWidget {

@@ -31,7 +31,7 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     );
 
     // 문 크기 확대 애니메이션
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.3).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fukuhub/screens/before_login_screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:fukuhub/widgets/door_widget.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
