@@ -82908,7 +82908,7 @@ p.d=s
 r=t.Y
 q=r.i("aJ<aw.T>")
 p.e=new A.aJ(A.cQ(B.fb,s,o),new A.az(0,-1.57,r),q)
-p.f=new A.aJ(A.cQ(B.fb,p.d,o),new A.az(1,1.3,r),q)},
+p.f=new A.aJ(A.cQ(B.fb,p.d,o),new A.az(1,1,r),q)},
 l(){var s=this.d
 s===$&&A.a()
 s.l()
