@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
-import 'package:fukuhub/widgets/orange_rounded_button.dart';
+import 'package:fukuhub/widgets/door_widget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.isFirstNavigatedSocialLoginButton});
@@ -14,61 +13,16 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final String mainPicture = "assets/images/fuku_hub.png";
-  bool _loginColumnVisible = false;
+  bool _loginDoorVisible = false;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        _loginColumnVisible = true;
+        _loginDoorVisible = true;
       });
     });
-  }
-
-  // Firebase 로그인 메서드
-  Future<void> _goHomeScreen() async {
-    if (mounted) {
-      // 로딩 화면을 잠깐 표시
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(), // 로딩 스피너 표시
-          );
-        },
-      );
-
-      // 약간의 지연을 주고 페이지를 이동
-      await Future.delayed(const Duration(seconds: 1));
-
-      // 로딩 화면을 닫고 새 페이지로 이동
-      if (mounted) {
-        Navigator.of(context).pop(); // 로딩 화면 닫기
-      }
-
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const Homepage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-            transitionDuration:
-                const Duration(milliseconds: 500), // 애니메이션의 길이 설정
-            reverseTransitionDuration: const Duration(milliseconds: 500),
-            fullscreenDialog: false,
-          ),
-          (Route<dynamic> route) => false, // 모든 이전 화면을 제거
-        );
-      }
-    }
   }
 
   @override
@@ -81,11 +35,11 @@ class _LoginState extends State<Login> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: const AssetImage(
-                  'assets/images/background.webp',
+                  'assets/images/fukuback.jpeg',
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.5), // 투명도 설정
+                  Colors.white.withOpacity(1), // 투명도 설정
                   BlendMode.dstATop,
                 ),
               ),
@@ -115,43 +69,25 @@ class _LoginState extends State<Login> {
                         )
                       ],
                     ),
-                    const Text(
-                      "福島の記憶を保存します",
-                      style: TextStyle(
-                          fontFamily: 'sana',
-                          fontSize: 50,
-                          fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(
-                      height: 80,
-                    ),
                   ],
                 ),
                 AnimatedOpacity(
-                  opacity: _loginColumnVisible ? 1.0 : 0.0,
+                  opacity: _loginDoorVisible ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 1000),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      const SizedBox(
-                        height: 60,
+                      Text(
+                        "福島の記憶を保存します",
+                        style: TextStyle(
+                            fontFamily: 'sana',
+                            fontSize: 50,
+                            fontWeight: FontWeight.w800),
                       ),
-                      Container(
-                        width: 200,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18.0),
-                          border: Border.all(
-                            color: Colors.orange.withOpacity(0.1),
-                            width: 1.0,
-                          ),
-                        ),
-                        child: OrangeRoundedButton(
-                          text: "ログイン",
-                          heroTag: "login_tag",
-                          method: _goHomeScreen,
-                        ),
+                      SizedBox(
+                        height: 80,
                       ),
-                      const SizedBox(
+                      DoorAnimationWidget(),
+                      SizedBox(
                         height: 80,
                       ),
                     ],

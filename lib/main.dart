@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fukuhub/screens/before_login_screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fukuhub/screens/after_login_screen/homepage.dart';
-import 'package:fukuhub/screens/door_test.dart';
+
+import 'package:fukuhub/widgets/door_widget.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -22,19 +21,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  User? _user; // Firebase User 객체
   @override
   void initState() {
     super.initState();
-    _auth.authStateChanges().listen((User? user) {
-      if (mounted) {
-        setState(() {
-          _user = user;
-        });
-      }
-    });
   }
 
   // This widget is the root of your application.
@@ -43,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         theme: ThemeData(
             primaryColor: Colors.white, fontFamily: 'Sunflower-Light'),
-        home: _user != null ? const Homepage() : const HomeScreen());
-    // home: const DoorAnimationExample());
+        home: const HomeScreen());
+    // home: const DoorAnimationWidget());
   }
 }
