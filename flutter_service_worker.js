@@ -28,7 +28,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "assets/assets/fonts/static/BuntaOneKana-DB.ttf": "ea58a40c8c0e4a4e408ca9490729f519",
 "assets/assets/fonts/Outfit-VariableFont_wght.ttf": "1b443ee3b6993db873f1faedffe56133",
 "assets/assets/images/fuku_pin.png": "87aa176c711704104359f65559fb7452",
-"assets/assets/images/door.png": "92bd849ecda3a3e7cef383dc85db81f5",
+"assets/assets/images/door.png": "f957f09d926fb4bae05c90660a7b2ee0",
 "assets/assets/images/background.webp": "fbdde4e6ae8297e30d4b1dbbe8a507c3",
 "assets/assets/images/fukuback.jpeg": "daf90396003c30b8390952ae76d2b262",
 "assets/assets/images/fuku_hub.png": "e376677067482ac781cf54e0066c8120",
@@ -54,7 +54,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "version.json": "a6e2155b832cb3584d4f2298014392ca",
-"flutter_bootstrap.js": "0e87968b589c4dc9000448f613284827"};
+"flutter_bootstrap.js": "d49ea8143343279210dba319bc9f1215"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
