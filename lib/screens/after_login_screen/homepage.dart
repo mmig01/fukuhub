@@ -46,7 +46,7 @@ class HomepageState extends State<Homepage> {
       TextEditingController(); // 비밀번호 컨트롤러
   final TextEditingController _descriptionController =
       TextEditingController(); // 설명 컨트롤러
-  double door_opacity = 0.0;
+  double doorOpacity = 0.0;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class HomepageState extends State<Homepage> {
     // 페이지 로드 시 페이드 효과 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        door_opacity = 1.0;
+        doorOpacity = 1.0;
       });
     });
     // 데이터베이스에서 마커 추가
@@ -254,211 +254,236 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: TotalAppBar(logo: logo),
       body: AnimatedOpacity(
-        opacity: door_opacity,
+        opacity: doorOpacity,
         duration: const Duration(milliseconds: 1500),
-        child: Row(
+        child: Stack(
           children: [
-            // 왼쪽 절반: Google Map
-            Expanded(
-              flex: 1,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: GoogleMap(
-                    initialCameraPosition: const CameraPosition(
-                      target: LatLng(37.4483, 140.5758), // 다무라 시의 위도와 경도
-                      zoom: 12.0, // 10km 반경을 보기 위한 줌 레벨
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: const AssetImage(
+                    'assets/images/fukuback2.jpeg',
+                  ),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.white.withOpacity(0.6), // 투명도 설정
+                    BlendMode.lighten,
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Row(
+                children: [
+                  // 왼쪽 절반: Google Map
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: GoogleMap(
+                          initialCameraPosition: const CameraPosition(
+                            target: LatLng(37.4483, 140.5758), // 다무라 시의 위도와 경도
+                            zoom: 12.0, // 10km 반경을 보기 위한 줌 레벨
+                          ),
+                          markers: _markers,
+                          onTap: (LatLng position) {
+                            _showPostWidget(position); // 장소 클릭 시 위젯 표시
+                          },
+                        ),
+                      ),
                     ),
-                    markers: _markers,
-                    onTap: (LatLng position) {
-                      _showPostWidget(position); // 장소 클릭 시 위젯 표시
-                    },
                   ),
-                ),
-              ),
-            ),
-            // 오른쪽 절반: Column을 통한 정보 표시 영역
-            Expanded(
-              flex: 1,
-              child: SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 10),
-                      isMarked
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _selectedMarker.title,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                if (_selectedMarker.imageUrl != '')
-                                  Container(
-                                    height: 300,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Image.network(
-                                      _selectedMarker.imageUrl,
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child; // 이미지가 정상적으로 로드되었을 때
-                                        } else {
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      (loadingProgress
-                                                              .expectedTotalBytes ??
-                                                          1)
-                                                  : null, // 진행률을 표시
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(
-                                          Icons.broken_image,
-                                          size: 50,
-                                          color: Colors.grey,
-                                        ); // 에러 발생 시 대체 아이콘
-                                      },
-                                    ),
-                                  ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  _selectedMarker.description,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  '작성자: ${_selectedMarker.name}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : _selectedPosition != null
-                              ? Column(
-                                  children: [
-                                    const Text(
-                                      '게시글을 입력하세요.',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    const SizedBox(height: 30),
-                                    SizedBox(
-                                      width: 150,
-                                      child: TextField(
-                                        controller: _nameController,
-                                        decoration: const InputDecoration(
-                                          labelText: '작성자',
-                                          hintText: '이름(닉네임)',
+                  // 오른쪽 절반: Column을 통한 정보 표시 영역
+                  Expanded(
+                    flex: 1,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 10),
+                            isMarked
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _selectedMarker.title,
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 150,
-                                      child: TextField(
-                                        obscureText: true,
-                                        controller: _passwordController,
-                                        decoration: const InputDecoration(
-                                          labelText: '비밀번호',
-                                          hintText: '비밀번호',
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 30),
-                                    TextField(
-                                      controller: _titleController,
-                                      decoration: const InputDecoration(
-                                        labelText: '제목',
-                                        hintText: '제목을 입력하세요.',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 50),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        if (_image != null)
-                                          Image.memory(
-                                            _image!,
-                                            height: 200,
-                                            width: 200,
+                                      const SizedBox(height: 20),
+                                      if (_selectedMarker.imageUrl != '')
+                                        Container(
+                                          height: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                        const SizedBox(height: 10),
-                                        ElevatedButton(
-                                          onPressed: _pickImage,
-                                          child: const Text('이미지 선택'),
+                                          child: Image.network(
+                                            _selectedMarker.imageUrl,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child; // 이미지가 정상적으로 로드되었을 때
+                                              } else {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            (loadingProgress
+                                                                    .expectedTotalBytes ??
+                                                                1)
+                                                        : null, // 진행률을 표시
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Icon(
+                                                Icons.broken_image,
+                                                size: 50,
+                                                color: Colors.grey,
+                                              ); // 에러 발생 시 대체 아이콘
+                                            },
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    TextField(
-                                      controller: _descriptionController,
-                                      decoration: const InputDecoration(
-                                        labelText: '내용',
-                                        hintText: '내용을 입력하세요.',
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        _selectedMarker.description,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 30),
-                                    Column(
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            if (_validateInputs()) {
-                                              _savePost();
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content:
-                                                      Text('모든 필드를 입력하세요.'),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: const Text('Save'),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        '작성자: ${_selectedMarker.name}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              : const Text(
-                                  '지도를 클릭하여 위치를 선택하세요.',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                    ],
+                                      ),
+                                    ],
+                                  )
+                                : _selectedPosition != null
+                                    ? Column(
+                                        children: [
+                                          const Text(
+                                            '게시글을 입력하세요.',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          SizedBox(
+                                            width: 150,
+                                            child: TextField(
+                                              controller: _nameController,
+                                              decoration: const InputDecoration(
+                                                labelText: '작성자',
+                                                hintText: '이름(닉네임)',
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 150,
+                                            child: TextField(
+                                              obscureText: true,
+                                              controller: _passwordController,
+                                              decoration: const InputDecoration(
+                                                labelText: '비밀번호',
+                                                hintText: '비밀번호',
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          TextField(
+                                            controller: _titleController,
+                                            decoration: const InputDecoration(
+                                              labelText: '제목',
+                                              hintText: '제목을 입력하세요.',
+                                            ),
+                                          ),
+                                          const SizedBox(height: 50),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              if (_image != null)
+                                                Image.memory(
+                                                  _image!,
+                                                  height: 200,
+                                                  width: 200,
+                                                ),
+                                              const SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: _pickImage,
+                                                child: const Text('이미지 선택'),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            controller: _descriptionController,
+                                            decoration: const InputDecoration(
+                                              labelText: '내용',
+                                              hintText: '내용을 입력하세요.',
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          Column(
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  if (_validateInputs()) {
+                                                    _savePost();
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            '모든 필드를 입력하세요.'),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                child: const Text('Save'),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : const Text(
+                                        '지도를 클릭하여 위치를 선택하세요.',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  // 로딩 표시
+                ],
               ),
             ),
-            // 로딩 표시
           ],
         ),
       ),

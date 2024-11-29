@@ -12,7 +12,7 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
-  late Animation<double> _scaleAnimation;
+  late Animation<double> _skewAnimation;
 
   bool _isAnimating = false;
 
@@ -26,12 +26,12 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     );
 
     // 문 열림 애니메이션 (회전)
-    _rotationAnimation = Tween<double>(begin: 0.0, end: -3.14 / 2).animate(
+    _rotationAnimation = Tween<double>(begin: 0.0, end: 3.14 / 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
-    // 문 크기 확대 애니메이션
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
+    // 오른쪽 확장 애니메이션 (비대칭 확대)
+    _skewAnimation = Tween<double>(begin: 0.0, end: 0.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -61,11 +61,10 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
               child: child,
             );
           },
-          transitionDuration: const Duration(milliseconds: 500), // 애니메이션의 길이 설정
+          transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
-          fullscreenDialog: false,
         ),
-        (Route<dynamic> route) => false, // 모든 이전 화면을 제거
+        (Route<dynamic> route) => false,
       );
     });
   }
@@ -77,26 +76,27 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Transform(
-              alignment: Alignment.centerLeft,
-              transform: Matrix4.identity()..rotateY(_rotationAnimation.value),
-              child: Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3), // 그림자 색상
-                      blurRadius: 5, // 그림자의 흐림 정도
-                      offset: const Offset(2, 2), // 그림자의 위치 (오른쪽과 아래)
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  'assets/images/door.png',
-                  fit: BoxFit.cover,
-                ),
+          return Transform(
+            alignment: Alignment.centerLeft, // 왼쪽을 기준으로 회전
+            transform: Matrix4.identity()
+              ..rotateY(_rotationAnimation.value) // 회전 애니메이션
+              ..setEntry(1, 0, _skewAnimation.value), // 오른쪽 부분만 확장
+            child: Container(
+              height: 320,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.9), // 그림자 색상
+                    blurRadius: 50, // 그림자의 흐림 정도
+                    offset: const Offset(10, 10), // 그림자의 위치
+                  ),
+                ],
+              ),
+              child: Image.asset(
+                'assets/images/door.png',
+                fit: BoxFit.cover,
+                color: Colors.white.withOpacity(0.9), // 이미지 투명도 설정
+                colorBlendMode: BlendMode.modulate, // 블렌드 모드 설정
               ),
             ),
           );

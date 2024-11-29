@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w800),
                       ),
                       SizedBox(
-                        height: 80,
+                        height: 140,
                       ),
                       DoorAnimationWidget(),
                       SizedBox(

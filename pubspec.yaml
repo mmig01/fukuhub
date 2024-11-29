@@ -78,6 +78,7 @@ flutter:
     - assets/images/background.webp
     - assets/images/door.png
     - assets/images/fukuback.jpeg
+    - assets/images/fukuback2.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
