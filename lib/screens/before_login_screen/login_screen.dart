@@ -76,12 +76,15 @@ class _LoginState extends State<Login> {
                   duration: const Duration(milliseconds: 1000),
                   child: const Column(
                     children: [
-                      Text(
-                        "福島の記憶を保存します",
-                        style: TextStyle(
-                            fontFamily: 'sana',
-                            fontSize: 50,
-                            fontWeight: FontWeight.w800),
+                      Padding(
+                        padding: EdgeInsets.all(30),
+                        child: Text(
+                          "福島の記憶を保存します",
+                          style: TextStyle(
+                              fontFamily: 'sana',
+                              fontSize: 50,
+                              fontWeight: FontWeight.w800),
+                        ),
                       ),
                       SizedBox(
                         height: 30,

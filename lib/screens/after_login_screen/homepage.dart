@@ -288,7 +288,7 @@ class HomepageState extends State<Homepage> {
                         child: GoogleMap(
                           initialCameraPosition: const CameraPosition(
                             target: LatLng(37.4483, 140.5758), // 다무라 시의 위도와 경도
-                            zoom: 12.0, // 10km 반경을 보기 위한 줌 레벨
+                            zoom: 12.5, // 10km 반경을 보기 위한 줌 레벨
                           ),
                           markers: _markers,
                           onTap: (LatLng position) {
@@ -469,7 +469,8 @@ class HomepageState extends State<Homepage> {
                                         ],
                                       )
                                     : const Text(
-                                        '지도를 클릭하여 위치를 선택하세요.',
+                                        // '지도를 클릭하여 위치를 선택하세요.',
+                                        "",
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -489,52 +490,66 @@ class HomepageState extends State<Homepage> {
       ),
       endDrawer: Drawer(
         backgroundColor: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            // Drawer Header
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: const AssetImage(
+                'assets/images/fukuback2.jpeg', // 공통 배경 이미지
               ),
-              child: Column(
-                children: [
-                  Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    height: 80,
-                    child: Image.asset(mainPicture),
-                  ),
-                  const Text(
-                    "후쿠시마 기억 저장소",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Sunflower-Bold',
-                    ),
-                  ),
-                ],
+              fit: BoxFit.cover, // 이미지 잘라내기
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.6), // 투명도 설정
+                BlendMode.lighten,
               ),
             ),
-            // Drawer 아이템들
-
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text(
-                '처음으로',
-                style: TextStyle(
-                  fontFamily: 'Sunflower-Light',
-                  color: Colors.black,
-                  fontSize: 18,
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              // Drawer Header
+              DrawerHeader(
+                // decoration: const BoxDecoration(
+                //   color: Colors.white,
+                // ),
+                child: Column(
+                  children: [
+                    Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      height: 80,
+                      child: Image.asset(mainPicture),
+                    ),
+                    const Text(
+                      "후쿠시마 기억 저장소",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Sunflower-Bold',
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              onTap: () {
-                _handleSignOut();
-              },
-            ),
-          ],
+              // Drawer 아이템들
+
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text(
+                  '처음으로',
+                  style: TextStyle(
+                    fontFamily: 'Sunflower-Light',
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: () {
+                  _handleSignOut();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

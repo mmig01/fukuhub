@@ -87,8 +87,10 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3), // 그림자 색상
-                    blurRadius: 50, // 그림자의 흐림 정도
-                    offset: const Offset(10, 10), // 그림자의 위치
+
+                    blurRadius: 30, // 그림자의 흐림 정도
+                    // spreadRadius: 10, // 그림자의 확산 정도
+                    offset: const Offset(5, 5), // 그림자의 위치
                   ),
                 ],
               ),
