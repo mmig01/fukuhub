@@ -82,11 +82,11 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
               ..rotateY(_rotationAnimation.value) // 회전 애니메이션
               ..setEntry(1, 0, _skewAnimation.value), // 오른쪽 부분만 확장
             child: Container(
-              height: 320,
+              height: 250,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.9), // 그림자 색상
+                    color: Colors.black.withOpacity(0.3), // 그림자 색상
                     blurRadius: 50, // 그림자의 흐림 정도
                     offset: const Offset(10, 10), // 그림자의 위치
                   ),
@@ -95,7 +95,7 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
               child: Image.asset(
                 'assets/images/door.png',
                 fit: BoxFit.cover,
-                color: Colors.white.withOpacity(0.9), // 이미지 투명도 설정
+                color: Colors.white.withOpacity(0.98), // 이미지 투명도 설정
                 colorBlendMode: BlendMode.modulate, // 블렌드 모드 설정
               ),
             ),

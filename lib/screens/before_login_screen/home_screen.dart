@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreen2State extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   final String mainPicture = "assets/images/fuku_hub.png";
+  final String doorPicture = 'assets/images/door_Test.png';
   bool _logoVisible = false;
 
   @override
@@ -58,37 +59,55 @@ class _HomeScreen2State extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: AnimatedOpacity(
+          opacity: _logoVisible ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 1000),
+          child: Stack(
             children: [
-              const Column(
-                children: [
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
-              ),
-              AnimatedOpacity(
-                opacity: _logoVisible ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 1000),
-                child: Hero(
-                  tag: mainPicture,
-                  child: Image.asset(
-                    mainPicture,
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: const AssetImage(
+                      'assets/images/fukuback.jpeg',
+                    ),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(1), // 투명도 설정
+                      BlendMode.dstATop,
+                    ),
                   ),
                 ),
               ),
-              const Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 55,
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                      ],
+                    ),
+                    Hero(
+                      tag: mainPicture,
+                      child: Image.asset(
+                        mainPicture,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const Column(
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 55,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -12,6 +12,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final String mainPicture = "assets/images/fuku_hub.png";
+  final String doorPicture = 'assets/images/door_Test.png';
   bool _loginDoorVisible = false;
 
   @override
@@ -83,9 +84,22 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w800),
                       ),
                       SizedBox(
-                        height: 140,
+                        height: 30,
                       ),
-                      DoorAnimationWidget(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("記憶の中に入る門 >>",
+                              style: TextStyle(
+                                  fontFamily: 'sana',
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w800)),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          DoorAnimationWidget(),
+                        ],
+                      ),
                       SizedBox(
                         height: 80,
                       ),

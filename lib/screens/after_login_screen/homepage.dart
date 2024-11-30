@@ -258,7 +258,7 @@ class HomepageState extends State<Homepage> {
       appBar: TotalAppBar(logo: logo),
       body: AnimatedOpacity(
         opacity: doorOpacity,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 1200),
         child: Stack(
           children: [
             Container(
