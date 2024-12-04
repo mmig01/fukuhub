@@ -4,7 +4,6 @@ class MarkerModel {
   final String password;
   final String imageUrl;
   final String description;
-  final String email;
 
   MarkerModel({
     required this.name,
@@ -12,6 +11,5 @@ class MarkerModel {
     required this.title,
     required this.imageUrl,
     required this.description,
-    required this.email,
   });
 }

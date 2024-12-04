@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fukuhub/widgets/door_widget.dart';
 
-class BlackRoundedButton extends StatefulWidget {
-  const BlackRoundedButton({
+class ColorRoundedButton extends StatefulWidget {
+  const ColorRoundedButton({
     super.key,
     required this.text,
     required this.heroTag,
@@ -13,10 +14,10 @@ class BlackRoundedButton extends StatefulWidget {
   final void Function() method;
 
   @override
-  State<BlackRoundedButton> createState() => _BlackRoundedButtonState();
+  State<ColorRoundedButton> createState() => _ColorRoundedButtonState();
 }
 
-class _BlackRoundedButtonState extends State<BlackRoundedButton>
+class _ColorRoundedButtonState extends State<ColorRoundedButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shakeAnimation;
@@ -56,10 +57,13 @@ class _BlackRoundedButtonState extends State<BlackRoundedButton>
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20), // 모서리 둥글게
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [
-                    Color(0xFFFFA6C1), // 파스텔 핑크
-                    Color.fromARGB(255, 121, 239, 133), // 파스텔 민트
+                    const Color.fromARGB(255, 252, 204, 218)
+                        .withOpacity(0.8), // 파스텔 핑크
+                    const Color.fromARGB(255, 210, 236, 212)
+                        .withOpacity(0.8), // 파스텔 민트
+                    const Color.fromARGB(255, 252, 204, 218).withOpacity(0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -73,14 +77,19 @@ class _BlackRoundedButtonState extends State<BlackRoundedButton>
                 ],
               ),
               child: Center(
-                child: Text(
-                  widget.text,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'sana',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  children: [
+                    const DoorAnimationWidget(),
+                    Text(
+                      widget.text,
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.6),
+                        fontFamily: 'sana',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -21,7 +21,6 @@ class HomepageState extends State<Homepage> {
   StreamSubscription<User?>? _authSubscription; // StreamSubscription 변수 추가
   final storageRef = FirebaseStorage.instance.ref(); // Storage 참조
 
-  User? _user;
   Uint8List? _image;
 
   final String logo = 'assets/images/fuku_hub.png';
@@ -34,7 +33,6 @@ class HomepageState extends State<Homepage> {
     title: '',
     imageUrl: '',
     description: '',
-    email: '',
     name: '',
     password: '',
   ); // 선택된 마커 정보
@@ -116,7 +114,6 @@ class HomepageState extends State<Homepage> {
                     // image url 이 null 이면 '' 으로 대체
                     imageUrl: post['imageUrl'] ?? '',
                     description: post['description'],
-                    email: post['account'],
                   );
                   isMarked = true;
                 });
@@ -146,6 +143,7 @@ class HomepageState extends State<Homepage> {
       _nameController.clear();
       _passwordController.clear();
       _descriptionController.clear();
+      _image = null;
     });
   }
 
@@ -185,7 +183,6 @@ class HomepageState extends State<Homepage> {
             'latitude': _selectedPosition!.latitude,
             'longitude': _selectedPosition!.longitude,
           },
-          'account': _user!.email,
           'name': _nameController.text,
           'password': _passwordController.text,
         });
@@ -320,6 +317,7 @@ class HomepageState extends State<Homepage> {
                                       Text(
                                         _selectedMarker.title,
                                         style: const TextStyle(
+                                          fontFamily: 'sana',
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -369,13 +367,15 @@ class HomepageState extends State<Homepage> {
                                       Text(
                                         _selectedMarker.description,
                                         style: const TextStyle(
+                                          fontFamily: 'sana',
                                           fontSize: 20,
                                         ),
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        '작성자: ${_selectedMarker.name}',
+                                        '作成者: ${_selectedMarker.name}',
                                         style: const TextStyle(
+                                          fontFamily: 'sana',
                                           fontSize: 16,
                                         ),
                                       ),
@@ -385,37 +385,57 @@ class HomepageState extends State<Homepage> {
                                     ? Column(
                                         children: [
                                           const Text(
-                                            '게시글을 입력하세요.',
-                                            style: TextStyle(fontSize: 20),
+                                            '記憶を残してみてください。',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'sana',
+                                            ),
                                           ),
                                           const SizedBox(height: 30),
                                           SizedBox(
-                                            width: 150,
+                                            width: 200,
                                             child: TextField(
                                               controller: _nameController,
-                                              decoration: const InputDecoration(
-                                                labelText: '작성자',
-                                                hintText: '이름(닉네임)',
+                                              decoration: InputDecoration(
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(
+                                                          0.5), // 힌트 텍스트 색상
+                                                  fontSize: 14, // 힌트 텍스트 크기
+                                                ),
+                                                labelText: '作成者',
+                                                hintText: '名前（ニックネーム）',
                                               ),
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 150,
+                                            width: 200,
                                             child: TextField(
                                               obscureText: true,
                                               controller: _passwordController,
-                                              decoration: const InputDecoration(
-                                                labelText: '비밀번호',
-                                                hintText: '비밀번호',
+                                              decoration: InputDecoration(
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(
+                                                          0.5), // 힌트 텍스트 색상
+                                                  fontSize: 14, // 힌트 텍스트 크기
+                                                ),
+                                                labelText: 'パスワード',
+                                                hintText: 'パスワード',
                                               ),
                                             ),
                                           ),
                                           const SizedBox(height: 30),
                                           TextField(
                                             controller: _titleController,
-                                            decoration: const InputDecoration(
-                                              labelText: '제목',
-                                              hintText: '제목을 입력하세요.',
+                                            decoration: InputDecoration(
+                                              hintStyle: TextStyle(
+                                                color: Colors.black.withOpacity(
+                                                    0.5), // 힌트 텍스트 색상
+                                                fontSize: 14, // 힌트 텍스트 크기
+                                              ),
+                                              labelText: '題目',
+                                              hintText: 'タイトルを入力してください。',
                                             ),
                                           ),
                                           const SizedBox(height: 50),
@@ -432,16 +452,21 @@ class HomepageState extends State<Homepage> {
                                               const SizedBox(height: 10),
                                               ElevatedButton(
                                                 onPressed: _pickImage,
-                                                child: const Text('이미지 선택'),
+                                                child: const Text('イメージ'),
                                               ),
                                             ],
                                           ),
                                           const SizedBox(height: 10),
                                           TextField(
                                             controller: _descriptionController,
-                                            decoration: const InputDecoration(
-                                              labelText: '내용',
-                                              hintText: '내용을 입력하세요.',
+                                            decoration: InputDecoration(
+                                              hintStyle: TextStyle(
+                                                color: Colors.black.withOpacity(
+                                                    0.5), // 힌트 텍스트 색상
+                                                fontSize: 14, // 힌트 텍스트 크기
+                                              ),
+                                              labelText: '内容',
+                                              hintText: 'あなたの話を聞かせてください。',
                                             ),
                                           ),
                                           const SizedBox(height: 30),
@@ -457,22 +482,22 @@ class HomepageState extends State<Homepage> {
                                                         .showSnackBar(
                                                       const SnackBar(
                                                         content: Text(
-                                                            '모든 필드를 입력하세요.'),
+                                                            'すべてのフィールドを入力してください。'),
                                                       ),
                                                     );
                                                   }
                                                 },
-                                                child: const Text('Save'),
+                                                child: const Text('セーブ'),
                                               ),
                                             ],
                                           ),
                                         ],
                                       )
                                     : const Text(
-                                        // '지도를 클릭하여 위치를 선택하세요.',
-                                        "",
+                                        '地図をクリックして場所を選択してください.',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 20,
+                                          fontFamily: 'sana',
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -522,11 +547,11 @@ class HomepageState extends State<Homepage> {
                       child: Image.asset(mainPicture),
                     ),
                     const Text(
-                      "후쿠시마 기억 저장소",
+                      "福島記憶リポジトリ",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
-                        fontFamily: 'Sunflower-Bold',
+                        fontFamily: 'sana',
                       ),
                     ),
                   ],
@@ -537,9 +562,9 @@ class HomepageState extends State<Homepage> {
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text(
-                  '처음으로',
+                  'バイバイ',
                   style: TextStyle(
-                    fontFamily: 'Sunflower-Light',
+                    fontFamily: 'sana',
                     color: Colors.black,
                     fontSize: 18,
                   ),

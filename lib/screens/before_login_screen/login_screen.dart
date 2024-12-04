@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fukuhub/widgets/black_rounded_button.dart';
-import 'package:fukuhub/widgets/door_widget.dart';
+import 'package:fukuhub/widgets/button_withdoor.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.isFirstNavigatedSocialLoginButton});
@@ -77,24 +76,26 @@ class _LoginState extends State<Login> {
                   duration: const Duration(milliseconds: 1000),
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Text(
-                          "福島の記憶を保存します",
+                          "福島記憶リポジトリ",
                           style: TextStyle(
                               fontFamily: 'sana',
-                              fontSize: 50,
+                              color: Colors.black.withOpacity(0.8),
+                              fontSize: 45,
                               fontWeight: FontWeight.w800),
                         ),
                       ),
-                      const DoorAnimationWidget(),
                       const SizedBox(
-                        height: 20,
+                        height: 40,
                       ),
                       SizedBox(
-                        width: 200,
-                        child: BlackRoundedButton(
-                            text: "記憶の中に入る門", heroTag: "enter", method: () {}),
+                        width: 300,
+                        child: ColorRoundedButton(
+                            text: "ドアをクリックしてください",
+                            heroTag: "enter",
+                            method: () {}),
                       ),
                       const SizedBox(
                         height: 80,
