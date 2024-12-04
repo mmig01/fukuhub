@@ -187,6 +187,19 @@ class HomepageState extends State<Homepage> {
           'password': _passwordController.text,
         });
 
+        // 로딩 화면을 잠깐 표시
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(), // 로딩 스피너 표시
+              );
+            },
+          );
+        }
+
         if (_image != null) {
           // Firebase Storage에 이미지 업로드
           String fileName = 'posts/$postId/image.png'; // postId를 경로에 사용
@@ -212,18 +225,6 @@ class HomepageState extends State<Homepage> {
           _image = null;
         });
 
-        // 로딩 화면을 잠깐 표시
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(), // 로딩 스피너 표시
-              );
-            },
-          );
-        }
         await _addMarkersFromDatabase();
         // 약간의 지연을 주고 페이지를 이동
         await Future.delayed(const Duration(seconds: 2));
