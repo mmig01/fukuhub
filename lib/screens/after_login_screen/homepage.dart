@@ -625,6 +625,7 @@ class HomepageState extends State<Homepage> {
 
   // 로그아웃 처리
   Future<CircularProgressIndicator> _handleSignOut() async {
+    await FirebaseAuth.instance.signOut();
     try {
       if (mounted) {
         showDialog(

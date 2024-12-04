@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fukuhub/screens/after_login_screen/homepage.dart';
 
@@ -42,12 +43,23 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     super.dispose();
   }
 
-  void _startAnimation() {
+  Future<void> _loginAndstartAnimation() async {
     if (_isAnimating) return;
     setState(() {
       _isAnimating = true;
     });
-
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      print("Signed in with temporary account.");
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print("Unknown error.");
+      }
+    }
     // 애니메이션 실행
     _controller.forward().then((_) {
       // 애니메이션 종료 후 다음 화면으로 이동
@@ -72,7 +84,7 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _startAnimation,
+      onTap: _loginAndstartAnimation,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
