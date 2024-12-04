@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fukuhub/widgets/black_rounded_button.dart';
 import 'package:fukuhub/widgets/door_widget.dart';
 
 class Login extends StatefulWidget {
@@ -74,9 +75,9 @@ class _LoginState extends State<Login> {
                 AnimatedOpacity(
                   opacity: _loginDoorVisible ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 1000),
-                  child: const Column(
+                  child: Column(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.all(30),
                         child: Text(
                           "福島の記憶を保存します",
@@ -86,24 +87,16 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.w800),
                         ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("記憶の中に入る門 >>",
-                              style: TextStyle(
-                                  fontFamily: 'sana',
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w800)),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          DoorAnimationWidget(),
-                        ],
+                      const DoorAnimationWidget(),
+                      const SizedBox(
+                        height: 20,
                       ),
                       SizedBox(
+                        width: 200,
+                        child: BlackRoundedButton(
+                            text: "記憶の中に入る門", heroTag: "enter", method: () {}),
+                      ),
+                      const SizedBox(
                         height: 80,
                       ),
                     ],
