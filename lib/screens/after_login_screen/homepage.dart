@@ -1,5 +1,6 @@
 import 'dart:async'; // StreamSubscription을 사용하기 위해 추가
 import 'dart:typed_data';
+import 'package:image/image.dart' as img;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fukuhub/models/marker_model.dart';
 import 'package:fukuhub/screens/before_login_screen/login_screen.dart';
@@ -147,12 +148,53 @@ class HomepageState extends State<Homepage> {
     });
   }
 
-  // 이미지 가져오기
+  // // 이미지 가져오기
+  // Future<void> _pickImage() async {
+  //   Uint8List? pickedFile = await ImagePickerWeb.getImageAsBytes();
+  //   setState(() {
+  //     _image = pickedFile;
+  //   });
+  // }
+  Future<Uint8List> compressImage(Uint8List imageData,
+      {int quality = 60}) async {
+    // 이미지 디코딩
+    final decodedImage = img.decodeImage(imageData);
+    if (decodedImage == null) {
+      throw Exception("Failed to decode image");
+    }
+
+    // 품질 설정하여 압축
+    final compressedImage = img.encodeJpg(decodedImage, quality: quality);
+
+    // Uint8List 반환
+    return Uint8List.fromList(compressedImage);
+  }
+
   Future<void> _pickImage() async {
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(), // 로딩 스피너 표시
+          );
+        },
+      );
+    }
     Uint8List? pickedFile = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      _image = pickedFile;
-    });
+    if (pickedFile != null) {
+      // 로딩 화면을 잠깐 표시
+
+      final compressedImage = await compressImage(pickedFile, quality: 80);
+
+      setState(() {
+        _image = compressedImage;
+      });
+    }
+    if (mounted) {
+      Navigator.of(context).pop(); // 로딩 화면 닫기
+    }
   }
 
   // 입력 필드가 비어 있는지 확인하는 함수
