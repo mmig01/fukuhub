@@ -5,10 +5,10 @@ const CACHE_NAME = 'flutter-app-cache';
 
 const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "favicon_by_Souayang.png": "7d9fe2bcd57e1978d16f4d29570b284e",
-"main.dart.js": "5a06b977751c3eb0722ebab75bea7bc4",
+"main.dart.js": "b43a16d107a64a7a49734b05f4e42630",
 "assets/FontManifest.json": "2bb7f8910306501cc60176c06bf44477",
 "assets/AssetManifest.bin": "e182f085c50c152b91c1df420de607e3",
-"assets/fonts/MaterialIcons-Regular.otf": "47e4d386691f806dedfa5198d60ba29f",
+"assets/fonts/MaterialIcons-Regular.otf": "b15a0a194f45a2e7018e6c8372516aa7",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/assets/fonts/static/SNsanafonMaruJ30.ttf": "14424c7ac387fb912a6a456335a9e2fa",
 "assets/assets/fonts/static/BuntaOneKana-U.ttf": "de9a80b2118ed9ebc752eb660b0061da",
@@ -55,7 +55,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "version.json": "a6e2155b832cb3584d4f2298014392ca",
-"flutter_bootstrap.js": "482f538ba4321ba956926cc66d771767"};
+"flutter_bootstrap.js": "813fe56e641d0edc1ea377c1f8d53f3d"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
