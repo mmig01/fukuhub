@@ -5,7 +5,7 @@ const CACHE_NAME = 'flutter-app-cache';
 
 const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "favicon_by_Souayang.png": "7d9fe2bcd57e1978d16f4d29570b284e",
-"main.dart.js": "b43a16d107a64a7a49734b05f4e42630",
+"main.dart.js": "2b1e9b6ac418184c69a8c68b8e9a65e3",
 "assets/FontManifest.json": "2bb7f8910306501cc60176c06bf44477",
 "assets/AssetManifest.bin": "e182f085c50c152b91c1df420de607e3",
 "assets/fonts/MaterialIcons-Regular.otf": "b15a0a194f45a2e7018e6c8372516aa7",
@@ -28,7 +28,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "assets/assets/fonts/static/BuntaOneKana-DB.ttf": "ea58a40c8c0e4a4e408ca9490729f519",
 "assets/assets/fonts/Outfit-VariableFont_wght.ttf": "1b443ee3b6993db873f1faedffe56133",
 "assets/assets/images/fuku_pin.png": "87aa176c711704104359f65559fb7452",
-"assets/assets/images/door.png": "fee1d9307e828b07684e7ab3259bf869",
+"assets/assets/images/door.png": "2e71927b83f8e42310c90f4f498a3b59",
 "assets/assets/images/fukuback2.jpeg": "b8019d91024e1b3076dc8b8e80b0be5a",
 "assets/assets/images/background.webp": "fbdde4e6ae8297e30d4b1dbbe8a507c3",
 "assets/assets/images/fukuback.jpeg": "c559ed3e2e839877996a02f3f213b6bb",
@@ -55,7 +55,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "version.json": "a6e2155b832cb3584d4f2298014392ca",
-"flutter_bootstrap.js": "813fe56e641d0edc1ea377c1f8d53f3d"};
+"flutter_bootstrap.js": "cbe40de2e71c5efda3a513107615683f"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
