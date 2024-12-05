@@ -13,7 +13,6 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
-  late Animation<double> _skewAnimation;
 
   bool _isAnimating = false;
 
@@ -26,13 +25,8 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
       vsync: this,
     );
 
-    // 문 열림 애니메이션 (회전)
+    // 문 열림 애니메이션 (왼쪽에서 열림)
     _rotationAnimation = Tween<double>(begin: 0.0, end: 3.14 / 2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-
-    // 오른쪽 확장 애니메이션 (비대칭 확대)
-    _skewAnimation = Tween<double>(begin: 0.0, end: 0.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -89,28 +83,29 @@ class _DoorAnimationWidgetState extends State<DoorAnimationWidget>
         animation: _controller,
         builder: (context, child) {
           return Transform(
-            alignment: Alignment.centerLeft, // 왼쪽을 기준으로 회전
+            alignment: Alignment.centerRight,
             transform: Matrix4.identity()
-              ..rotateY(_rotationAnimation.value) // 회전 애니메이션
-              ..setEntry(1, 0, _skewAnimation.value), // 오른쪽 부분만 확장
+              ..rotateY(_rotationAnimation.value), // 왼쪽에서 회전
             child: Container(
               height: 250,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3), // 그림자 색상
-
                     blurRadius: 30, // 그림자의 흐림 정도
-                    // spreadRadius: 10, // 그림자의 확산 정도
                     offset: const Offset(5, 5), // 그림자의 위치
                   ),
                 ],
               ),
-              child: Image.asset(
-                'assets/images/door.png',
-                fit: BoxFit.cover,
-                color: Colors.white.withOpacity(0.98), // 이미지 투명도 설정
-                colorBlendMode: BlendMode.modulate, // 블렌드 모드 설정
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(0), // 이미지 뒤집힘 방지
+                child: Image.asset(
+                  'assets/images/door.png',
+                  fit: BoxFit.cover,
+                  color: Colors.white.withOpacity(0.98), // 이미지 투명도 설정
+                  colorBlendMode: BlendMode.modulate, // 블렌드 모드 설정
+                ),
               ),
             ),
           );
