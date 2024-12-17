@@ -515,8 +515,8 @@ class HomepageState extends State<Homepage> {
                         borderRadius: BorderRadius.circular(16),
                         child: GoogleMap(
                           initialCameraPosition: const CameraPosition(
-                            target: LatLng(37.4483, 140.5758), // 다무라 시의 위도와 경도
-                            zoom: 12.5, // 10km 반경을 보기 위한 줌 레벨
+                            target: LatLng(37.4483, 140.3), // 다무라 시의 위도와 경도
+                            zoom: 10, // 10km 반경을 보기 위한 줌 레벨
                           ),
                           markers: _markers,
                           onTap: (LatLng position) {
